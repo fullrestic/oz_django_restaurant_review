@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-with open(BASE_DIR / '.config_secret/secret.json') as f:
+with open(BASE_DIR / 'secret.json') as f:
     config_secret_str = f.read()
 
 SECRET = json.loads(config_secret_str)
@@ -90,14 +90,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': SECRET['DB']['NAME'],
         'USER' : SECRET['DB']['USER'],
         'PASSWORD' : SECRET['DB']['PASSWORD'],
-        'HOST' : '127.0.0.1',
-        'PORT' : '3306',
+        'HOST' : SECRET['DB']['HOST'],
+        'PORT' : SECRET['DB']['PORT'],
     }
 }
 
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -139,6 +141,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
 
 APPEND_SLASH = False
 
