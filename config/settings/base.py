@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import json
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,9 +29,9 @@ SECRET = json.loads(config_secret_str)
 SECRET_KEY = SECRET['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# DEBUG = True
+#
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     'django_cleanup.apps.CleanupConfig',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -87,19 +89,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': SECRET['DB']['NAME'],
-        'USER' : SECRET['DB']['USER'],
-        'PASSWORD' : SECRET['DB']['PASSWORD'],
-        'HOST' : SECRET['DB']['HOST'],
-        'PORT' : SECRET['DB']['PORT'],
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': SECRET['DB']['NAME'],
+#         'USER' : SECRET['DB']['USER'],
+#         'PASSWORD' : SECRET['DB']['PASSWORD'],
+#         'HOST' : SECRET['DB']['HOST'],
+#         'PORT' : SECRET['DB']['PORT'],
+#     }
+# }
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -135,7 +137,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -147,8 +149,17 @@ AUTH_USER_MODEL = 'users.User'
 APPEND_SLASH = False
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication'],
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     "DEFAULT_PERMISSION_CLASSES" : ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
     'DEFAULT_PAGINATION_CLASS' : 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "UPDATE_LAST_LOGIN": True,
 }
