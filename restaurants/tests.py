@@ -32,11 +32,13 @@ class RestaurantViewTestCase(APITestCase):
             "regular_holiday": "TUE"
         }
 
-        # User.objects.create_user(
-        #     nickname="test-user",
-        #     email="test@test.com",
-        #     password="test123",
-        # )
+        self.user = User.objects.create_user(
+            nickname="test-user",
+            email="test@test.com",
+            password="test123",
+        )
+
+        self.client.force_authenticate(self.user)
 
     def test_restaurant_list_view(self):
         url = reverse('restaurant-list')

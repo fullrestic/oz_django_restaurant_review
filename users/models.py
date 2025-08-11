@@ -31,4 +31,4 @@ class User(AbstractBaseUser, PermissionsMixin) :
     profile_image = ImageField("프로필 이미지", upload_to="users/profile_images", default="users/blank_profile_image.png")
 
     objects = UserManager()
-    USERNAME_FIELD = "nickname"
+    USERNAME_FIELD = "email"
