@@ -19,9 +19,13 @@ class UserManager(BaseUserManager) :
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, nickname, email, password, *args, **kwargs):
+    def create_superuser(self, email, password, nickname=None, *args, **kwargs):
+        if nickname is None :
+            nickname = input("Nickname: ")
+
         user = self.create_user(nickname, email, password)
         user.is_superuser = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
@@ -29,6 +33,8 @@ class User(AbstractBaseUser, PermissionsMixin) :
     nickname = models.CharField("닉네임", max_length=20, unique=True)
     email = models.EmailField("이메일", max_length=40, unique=True)
     profile_image = ImageField("프로필 이미지", upload_to="users/profile_images", default="users/blank_profile_image.png")
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = UserManager()
     USERNAME_FIELD = "email"
